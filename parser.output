@@ -1,0 +1,1872 @@
+Grammar
+
+    0 $accept: program $end
+
+    1 program: items
+
+    2 items: ε
+    3      | items item
+
+    4 item: class_def
+    5     | main_def
+
+    6 $@1: ε
+
+    7 class_def: CLASS ID $@1 LBRACE members RBRACE SEMICOLON
+
+    8 main_def: INT ID LPAREN RPAREN runtime_block
+
+    9 members: ε
+   10        | members member
+
+   11 member: PUBLIC COLON
+
+   12 $@2: ε
+
+   13 member: INT $@2 member_after_type
+
+   14 $@3: ε
+
+   15 member: BOOL $@3 member_after_type
+
+   16 $@4: ε
+
+   17 member: VOID $@4 member_after_type
+
+   18 $@5: ε
+
+   19 member: ID $@5 id_started_member
+   20       | SEMICOLON
+
+   21 member_after_type: ID declaration_or_method_tail
+   22                  | OPERATOR operator_symbol LPAREN param_decl RPAREN const_opt operator_tail
+
+   23 id_started_member: LPAREN parameter_blob RPAREN ctor_initializer_opt block
+   24                  | ID declaration_or_method_tail
+   25                  | OPERATOR operator_symbol LPAREN param_decl RPAREN const_opt operator_tail
+
+   26 declaration_or_method_tail: declaration_tail SEMICOLON
+   27                           | LPAREN parameter_blob RPAREN const_opt method_tail
+
+   28 declaration_tail: ε
+   29                 | COMMA ID declaration_tail
+
+   30 ctor_initializer_opt: ε
+   31                     | COLON ctor_initializer_list
+
+   32 ctor_initializer_list: ctor_initializer
+   33                      | ctor_initializer_list COMMA ctor_initializer
+
+   34 ctor_initializer: ID LPAREN argument_blob RPAREN
+
+   35 method_tail: SEMICOLON
+   36            | block
+
+   37 const_opt: ε
+   38          | CONST
+
+   39 operator_tail: SEMICOLON
+   40              | block
+
+   41 param_decl: const_opt type ref_opt ID
+
+   42 ref_opt: ε
+   43        | AMP
+
+   44 type: ID
+   45     | INT
+   46     | BOOL
+   47     | VOID
+
+   48 operator_symbol: PLUS
+   49                | MINUS
+   50                | MUL
+   51                | DIV
+   52                | EQ
+   53                | LBRACKET RBRACKET
+
+   54 parameter_blob: ε
+   55               | parameter_blob parameter_blob_token
+
+   56 parameter_blob_token: CONST
+   57                     | ID
+   58                     | NUMBER
+   59                     | STRING_LITERAL
+   60                     | INT
+   61                     | BOOL
+   62                     | VOID
+   63                     | AMP
+   64                     | ASSIGN
+   65                     | COMMA
+   66                     | MINUS
+
+   67 argument_blob: ε
+   68              | argument_blob argument_token
+
+   69 argument_token: ID
+   70               | NUMBER
+   71               | STRING_LITERAL
+   72               | INT
+   73               | BOOL
+   74               | VOID
+   75               | COMMA
+   76               | MINUS
+   77               | PLUS
+   78               | MUL
+   79               | DIV
+   80               | EQ
+   81               | AMP
+   82               | ASSIGN
+
+   83 block: LBRACE block_items RBRACE
+
+   84 block_items: ε
+   85            | block_items block_item
+
+   86 block_item: block
+   87           | block_token
+
+   88 block_token: ID
+   89            | NUMBER
+   90            | STRING_LITERAL
+   91            | INT
+   92            | BOOL
+   93            | VOID
+   94            | RETURN
+   95            | CONST
+   96            | PUBLIC
+   97            | OPERATOR
+   98            | PLUS
+   99            | MINUS
+  100            | MUL
+  101            | DIV
+  102            | EQ
+  103            | LPAREN
+  104            | RPAREN
+  105            | SEMICOLON
+  106            | LBRACKET
+  107            | RBRACKET
+  108            | COLON
+  109            | COMMA
+  110            | AMP
+  111            | ASSIGN
+
+  112 runtime_block: LBRACE runtime_items RBRACE
+
+  113 runtime_items: ε
+  114              | runtime_items runtime_item
+
+  115 runtime_item: text_declaration
+  116             | runtime_expression
+  117             | RETURN NUMBER SEMICOLON
+  118             | SEMICOLON
+
+  119 text_declaration: ID ID LPAREN STRING_LITERAL RPAREN SEMICOLON
+
+  120 runtime_expression: ID PLUS ID SEMICOLON
+  121                   | ID MINUS ID SEMICOLON
+  122                   | ID MUL NUMBER SEMICOLON
+  123                   | ID EQ ID SEMICOLON
+  124                   | ID LBRACKET NUMBER RBRACKET SEMICOLON
+
+
+Terminals, with rules where they appear
+
+    $end (0) 0
+    error (256)
+    CLASS (258) 7
+    OPERATOR (259) 22 25 97
+    PUBLIC (260) 11 96
+    CONST (261) 38 56 95
+    INT (262) 8 13 45 60 72 91
+    BOOL (263) 15 46 61 73 92
+    VOID (264) 17 47 62 74 93
+    RETURN (265) 94 117
+    PLUS (266) 48 77 98 120
+    MINUS (267) 49 66 76 99 121
+    MUL (268) 50 78 100 122
+    DIV (269) 51 79 101
+    EQ (270) 52 80 102 123
+    LBRACE (271) 7 83 112
+    RBRACE (272) 7 83 112
+    LPAREN (273) 8 22 23 25 27 34 103 119
+    RPAREN (274) 8 22 23 25 27 34 104 119
+    SEMICOLON (275) 7 20 26 35 39 105 117 118 119 120 121 122 123 124
+    LBRACKET (276) 53 106 124
+    RBRACKET (277) 53 107 124
+    COLON (278) 11 31 108
+    COMMA (279) 29 33 65 75 109
+    AMP (280) 43 63 81 110
+    ASSIGN (281) 64 82 111
+    ID <str> (282) 7 8 19 21 24 29 34 41 44 57 69 88 119 120 121 122 123 124
+    NUMBER <str> (283) 58 70 89 117 122 124
+    STRING_LITERAL <str> (284) 59 71 90 119
+
+
+Nonterminals, with rules where they appear
+
+    $accept (30)
+        on left: 0
+    program (31)
+        on left: 1
+        on right: 0
+    items (32)
+        on left: 2 3
+        on right: 1 3
+    item (33)
+        on left: 4 5
+        on right: 3
+    class_def (34)
+        on left: 7
+        on right: 4
+    $@1 (35)
+        on left: 6
+        on right: 7
+    main_def (36)
+        on left: 8
+        on right: 5
+    members (37)
+        on left: 9 10
+        on right: 7 10
+    member (38)
+        on left: 11 13 15 17 19 20
+        on right: 10
+    $@2 (39)
+        on left: 12
+        on right: 13
+    $@3 (40)
+        on left: 14
+        on right: 15
+    $@4 (41)
+        on left: 16
+        on right: 17
+    $@5 (42)
+        on left: 18
+        on right: 19
+    member_after_type (43)
+        on left: 21 22
+        on right: 13 15 17
+    id_started_member (44)
+        on left: 23 24 25
+        on right: 19
+    declaration_or_method_tail (45)
+        on left: 26 27
+        on right: 21 24
+    declaration_tail (46)
+        on left: 28 29
+        on right: 26 29
+    ctor_initializer_opt (47)
+        on left: 30 31
+        on right: 23
+    ctor_initializer_list (48)
+        on left: 32 33
+        on right: 31 33
+    ctor_initializer (49)
+        on left: 34
+        on right: 32 33
+    method_tail (50)
+        on left: 35 36
+        on right: 27
+    const_opt (51)
+        on left: 37 38
+        on right: 22 25 27 41
+    operator_tail (52)
+        on left: 39 40
+        on right: 22 25
+    param_decl (53)
+        on left: 41
+        on right: 22 25
+    ref_opt (54)
+        on left: 42 43
+        on right: 41
+    type <str> (55)
+        on left: 44 45 46 47
+        on right: 41
+    operator_symbol <str> (56)
+        on left: 48 49 50 51 52 53
+        on right: 22 25
+    parameter_blob (57)
+        on left: 54 55
+        on right: 23 27 55
+    parameter_blob_token (58)
+        on left: 56 57 58 59 60 61 62 63 64 65 66
+        on right: 55
+    argument_blob (59)
+        on left: 67 68
+        on right: 34 68
+    argument_token (60)
+        on left: 69 70 71 72 73 74 75 76 77 78 79 80 81 82
+        on right: 68
+    block (61)
+        on left: 83
+        on right: 23 36 40 86
+    block_items (62)
+        on left: 84 85
+        on right: 83 85
+    block_item (63)
+        on left: 86 87
+        on right: 85
+    block_token (64)
+        on left: 88 89 90 91 92 93 94 95 96 97 98 99 100 101 102 103 104 105 106 107 108 109 110 111
+        on right: 87
+    runtime_block (65)
+        on left: 112
+        on right: 8
+    runtime_items (66)
+        on left: 113 114
+        on right: 112 114
+    runtime_item (67)
+        on left: 115 116 117 118
+        on right: 114
+    text_declaration (68)
+        on left: 119
+        on right: 115
+    runtime_expression (69)
+        on left: 120 121 122 123 124
+        on right: 116
+
+
+State 0
+
+    0 $accept: • program $end
+
+    $default  reduce using rule 2 (items)
+
+    program  go to state 1
+    items    go to state 2
+
+
+State 1
+
+    0 $accept: program • $end
+
+    $end  shift, and go to state 3
+
+
+State 2
+
+    1 program: items •
+    3 items: items • item
+
+    CLASS  shift, and go to state 4
+    INT    shift, and go to state 5
+
+    $default  reduce using rule 1 (program)
+
+    item       go to state 6
+    class_def  go to state 7
+    main_def   go to state 8
+
+
+State 3
+
+    0 $accept: program $end •
+
+    $default  accept
+
+
+State 4
+
+    7 class_def: CLASS • ID $@1 LBRACE members RBRACE SEMICOLON
+
+    ID  shift, and go to state 9
+
+
+State 5
+
+    8 main_def: INT • ID LPAREN RPAREN runtime_block
+
+    ID  shift, and go to state 10
+
+
+State 6
+
+    3 items: items item •
+
+    $default  reduce using rule 3 (items)
+
+
+State 7
+
+    4 item: class_def •
+
+    $default  reduce using rule 4 (item)
+
+
+State 8
+
+    5 item: main_def •
+
+    $default  reduce using rule 5 (item)
+
+
+State 9
+
+    7 class_def: CLASS ID • $@1 LBRACE members RBRACE SEMICOLON
+
+    $default  reduce using rule 6 ($@1)
+
+    $@1  go to state 11
+
+
+State 10
+
+    8 main_def: INT ID • LPAREN RPAREN runtime_block
+
+    LPAREN  shift, and go to state 12
+
+
+State 11
+
+    7 class_def: CLASS ID $@1 • LBRACE members RBRACE SEMICOLON
+
+    LBRACE  shift, and go to state 13
+
+
+State 12
+
+    8 main_def: INT ID LPAREN • RPAREN runtime_block
+
+    RPAREN  shift, and go to state 14
+
+
+State 13
+
+    7 class_def: CLASS ID $@1 LBRACE • members RBRACE SEMICOLON
+
+    $default  reduce using rule 9 (members)
+
+    members  go to state 15
+
+
+State 14
+
+    8 main_def: INT ID LPAREN RPAREN • runtime_block
+
+    LBRACE  shift, and go to state 16
+
+    runtime_block  go to state 17
+
+
+State 15
+
+    7 class_def: CLASS ID $@1 LBRACE members • RBRACE SEMICOLON
+   10 members: members • member
+
+    PUBLIC     shift, and go to state 18
+    INT        shift, and go to state 19
+    BOOL       shift, and go to state 20
+    VOID       shift, and go to state 21
+    RBRACE     shift, and go to state 22
+    SEMICOLON  shift, and go to state 23
+    ID         shift, and go to state 24
+
+    member  go to state 25
+
+
+State 16
+
+  112 runtime_block: LBRACE • runtime_items RBRACE
+
+    $default  reduce using rule 113 (runtime_items)
+
+    runtime_items  go to state 26
+
+
+State 17
+
+    8 main_def: INT ID LPAREN RPAREN runtime_block •
+
+    $default  reduce using rule 8 (main_def)
+
+
+State 18
+
+   11 member: PUBLIC • COLON
+
+    COLON  shift, and go to state 27
+
+
+State 19
+
+   13 member: INT • $@2 member_after_type
+
+    $default  reduce using rule 12 ($@2)
+
+    $@2  go to state 28
+
+
+State 20
+
+   15 member: BOOL • $@3 member_after_type
+
+    $default  reduce using rule 14 ($@3)
+
+    $@3  go to state 29
+
+
+State 21
+
+   17 member: VOID • $@4 member_after_type
+
+    $default  reduce using rule 16 ($@4)
+
+    $@4  go to state 30
+
+
+State 22
+
+    7 class_def: CLASS ID $@1 LBRACE members RBRACE • SEMICOLON
+
+    SEMICOLON  shift, and go to state 31
+
+
+State 23
+
+   20 member: SEMICOLON •
+
+    $default  reduce using rule 20 (member)
+
+
+State 24
+
+   19 member: ID • $@5 id_started_member
+
+    $default  reduce using rule 18 ($@5)
+
+    $@5  go to state 32
+
+
+State 25
+
+   10 members: members member •
+
+    $default  reduce using rule 10 (members)
+
+
+State 26
+
+  112 runtime_block: LBRACE runtime_items • RBRACE
+  114 runtime_items: runtime_items • runtime_item
+
+    RETURN     shift, and go to state 33
+    RBRACE     shift, and go to state 34
+    SEMICOLON  shift, and go to state 35
+    ID         shift, and go to state 36
+
+    runtime_item        go to state 37
+    text_declaration    go to state 38
+    runtime_expression  go to state 39
+
+
+State 27
+
+   11 member: PUBLIC COLON •
+
+    $default  reduce using rule 11 (member)
+
+
+State 28
+
+   13 member: INT $@2 • member_after_type
+
+    OPERATOR  shift, and go to state 40
+    ID        shift, and go to state 41
+
+    member_after_type  go to state 42
+
+
+State 29
+
+   15 member: BOOL $@3 • member_after_type
+
+    OPERATOR  shift, and go to state 40
+    ID        shift, and go to state 41
+
+    member_after_type  go to state 43
+
+
+State 30
+
+   17 member: VOID $@4 • member_after_type
+
+    OPERATOR  shift, and go to state 40
+    ID        shift, and go to state 41
+
+    member_after_type  go to state 44
+
+
+State 31
+
+    7 class_def: CLASS ID $@1 LBRACE members RBRACE SEMICOLON •
+
+    $default  reduce using rule 7 (class_def)
+
+
+State 32
+
+   19 member: ID $@5 • id_started_member
+
+    OPERATOR  shift, and go to state 45
+    LPAREN    shift, and go to state 46
+    ID        shift, and go to state 47
+
+    id_started_member  go to state 48
+
+
+State 33
+
+  117 runtime_item: RETURN • NUMBER SEMICOLON
+
+    NUMBER  shift, and go to state 49
+
+
+State 34
+
+  112 runtime_block: LBRACE runtime_items RBRACE •
+
+    $default  reduce using rule 112 (runtime_block)
+
+
+State 35
+
+  118 runtime_item: SEMICOLON •
+
+    $default  reduce using rule 118 (runtime_item)
+
+
+State 36
+
+  119 text_declaration: ID • ID LPAREN STRING_LITERAL RPAREN SEMICOLON
+  120 runtime_expression: ID • PLUS ID SEMICOLON
+  121                   | ID • MINUS ID SEMICOLON
+  122                   | ID • MUL NUMBER SEMICOLON
+  123                   | ID • EQ ID SEMICOLON
+  124                   | ID • LBRACKET NUMBER RBRACKET SEMICOLON
+
+    PLUS      shift, and go to state 50
+    MINUS     shift, and go to state 51
+    MUL       shift, and go to state 52
+    EQ        shift, and go to state 53
+    LBRACKET  shift, and go to state 54
+    ID        shift, and go to state 55
+
+
+State 37
+
+  114 runtime_items: runtime_items runtime_item •
+
+    $default  reduce using rule 114 (runtime_items)
+
+
+State 38
+
+  115 runtime_item: text_declaration •
+
+    $default  reduce using rule 115 (runtime_item)
+
+
+State 39
+
+  116 runtime_item: runtime_expression •
+
+    $default  reduce using rule 116 (runtime_item)
+
+
+State 40
+
+   22 member_after_type: OPERATOR • operator_symbol LPAREN param_decl RPAREN const_opt operator_tail
+
+    PLUS      shift, and go to state 56
+    MINUS     shift, and go to state 57
+    MUL       shift, and go to state 58
+    DIV       shift, and go to state 59
+    EQ        shift, and go to state 60
+    LBRACKET  shift, and go to state 61
+
+    operator_symbol  go to state 62
+
+
+State 41
+
+   21 member_after_type: ID • declaration_or_method_tail
+
+    LPAREN  shift, and go to state 63
+    COMMA   shift, and go to state 64
+
+    $default  reduce using rule 28 (declaration_tail)
+
+    declaration_or_method_tail  go to state 65
+    declaration_tail            go to state 66
+
+
+State 42
+
+   13 member: INT $@2 member_after_type •
+
+    $default  reduce using rule 13 (member)
+
+
+State 43
+
+   15 member: BOOL $@3 member_after_type •
+
+    $default  reduce using rule 15 (member)
+
+
+State 44
+
+   17 member: VOID $@4 member_after_type •
+
+    $default  reduce using rule 17 (member)
+
+
+State 45
+
+   25 id_started_member: OPERATOR • operator_symbol LPAREN param_decl RPAREN const_opt operator_tail
+
+    PLUS      shift, and go to state 56
+    MINUS     shift, and go to state 57
+    MUL       shift, and go to state 58
+    DIV       shift, and go to state 59
+    EQ        shift, and go to state 60
+    LBRACKET  shift, and go to state 61
+
+    operator_symbol  go to state 67
+
+
+State 46
+
+   23 id_started_member: LPAREN • parameter_blob RPAREN ctor_initializer_opt block
+
+    $default  reduce using rule 54 (parameter_blob)
+
+    parameter_blob  go to state 68
+
+
+State 47
+
+   24 id_started_member: ID • declaration_or_method_tail
+
+    LPAREN  shift, and go to state 63
+    COMMA   shift, and go to state 64
+
+    $default  reduce using rule 28 (declaration_tail)
+
+    declaration_or_method_tail  go to state 69
+    declaration_tail            go to state 66
+
+
+State 48
+
+   19 member: ID $@5 id_started_member •
+
+    $default  reduce using rule 19 (member)
+
+
+State 49
+
+  117 runtime_item: RETURN NUMBER • SEMICOLON
+
+    SEMICOLON  shift, and go to state 70
+
+
+State 50
+
+  120 runtime_expression: ID PLUS • ID SEMICOLON
+
+    ID  shift, and go to state 71
+
+
+State 51
+
+  121 runtime_expression: ID MINUS • ID SEMICOLON
+
+    ID  shift, and go to state 72
+
+
+State 52
+
+  122 runtime_expression: ID MUL • NUMBER SEMICOLON
+
+    NUMBER  shift, and go to state 73
+
+
+State 53
+
+  123 runtime_expression: ID EQ • ID SEMICOLON
+
+    ID  shift, and go to state 74
+
+
+State 54
+
+  124 runtime_expression: ID LBRACKET • NUMBER RBRACKET SEMICOLON
+
+    NUMBER  shift, and go to state 75
+
+
+State 55
+
+  119 text_declaration: ID ID • LPAREN STRING_LITERAL RPAREN SEMICOLON
+
+    LPAREN  shift, and go to state 76
+
+
+State 56
+
+   48 operator_symbol: PLUS •
+
+    $default  reduce using rule 48 (operator_symbol)
+
+
+State 57
+
+   49 operator_symbol: MINUS •
+
+    $default  reduce using rule 49 (operator_symbol)
+
+
+State 58
+
+   50 operator_symbol: MUL •
+
+    $default  reduce using rule 50 (operator_symbol)
+
+
+State 59
+
+   51 operator_symbol: DIV •
+
+    $default  reduce using rule 51 (operator_symbol)
+
+
+State 60
+
+   52 operator_symbol: EQ •
+
+    $default  reduce using rule 52 (operator_symbol)
+
+
+State 61
+
+   53 operator_symbol: LBRACKET • RBRACKET
+
+    RBRACKET  shift, and go to state 77
+
+
+State 62
+
+   22 member_after_type: OPERATOR operator_symbol • LPAREN param_decl RPAREN const_opt operator_tail
+
+    LPAREN  shift, and go to state 78
+
+
+State 63
+
+   27 declaration_or_method_tail: LPAREN • parameter_blob RPAREN const_opt method_tail
+
+    $default  reduce using rule 54 (parameter_blob)
+
+    parameter_blob  go to state 79
+
+
+State 64
+
+   29 declaration_tail: COMMA • ID declaration_tail
+
+    ID  shift, and go to state 80
+
+
+State 65
+
+   21 member_after_type: ID declaration_or_method_tail •
+
+    $default  reduce using rule 21 (member_after_type)
+
+
+State 66
+
+   26 declaration_or_method_tail: declaration_tail • SEMICOLON
+
+    SEMICOLON  shift, and go to state 81
+
+
+State 67
+
+   25 id_started_member: OPERATOR operator_symbol • LPAREN param_decl RPAREN const_opt operator_tail
+
+    LPAREN  shift, and go to state 82
+
+
+State 68
+
+   23 id_started_member: LPAREN parameter_blob • RPAREN ctor_initializer_opt block
+   55 parameter_blob: parameter_blob • parameter_blob_token
+
+    CONST           shift, and go to state 83
+    INT             shift, and go to state 84
+    BOOL            shift, and go to state 85
+    VOID            shift, and go to state 86
+    MINUS           shift, and go to state 87
+    RPAREN          shift, and go to state 88
+    COMMA           shift, and go to state 89
+    AMP             shift, and go to state 90
+    ASSIGN          shift, and go to state 91
+    ID              shift, and go to state 92
+    NUMBER          shift, and go to state 93
+    STRING_LITERAL  shift, and go to state 94
+
+    parameter_blob_token  go to state 95
+
+
+State 69
+
+   24 id_started_member: ID declaration_or_method_tail •
+
+    $default  reduce using rule 24 (id_started_member)
+
+
+State 70
+
+  117 runtime_item: RETURN NUMBER SEMICOLON •
+
+    $default  reduce using rule 117 (runtime_item)
+
+
+State 71
+
+  120 runtime_expression: ID PLUS ID • SEMICOLON
+
+    SEMICOLON  shift, and go to state 96
+
+
+State 72
+
+  121 runtime_expression: ID MINUS ID • SEMICOLON
+
+    SEMICOLON  shift, and go to state 97
+
+
+State 73
+
+  122 runtime_expression: ID MUL NUMBER • SEMICOLON
+
+    SEMICOLON  shift, and go to state 98
+
+
+State 74
+
+  123 runtime_expression: ID EQ ID • SEMICOLON
+
+    SEMICOLON  shift, and go to state 99
+
+
+State 75
+
+  124 runtime_expression: ID LBRACKET NUMBER • RBRACKET SEMICOLON
+
+    RBRACKET  shift, and go to state 100
+
+
+State 76
+
+  119 text_declaration: ID ID LPAREN • STRING_LITERAL RPAREN SEMICOLON
+
+    STRING_LITERAL  shift, and go to state 101
+
+
+State 77
+
+   53 operator_symbol: LBRACKET RBRACKET •
+
+    $default  reduce using rule 53 (operator_symbol)
+
+
+State 78
+
+   22 member_after_type: OPERATOR operator_symbol LPAREN • param_decl RPAREN const_opt operator_tail
+
+    CONST  shift, and go to state 102
+
+    $default  reduce using rule 37 (const_opt)
+
+    const_opt   go to state 103
+    param_decl  go to state 104
+
+
+State 79
+
+   27 declaration_or_method_tail: LPAREN parameter_blob • RPAREN const_opt method_tail
+   55 parameter_blob: parameter_blob • parameter_blob_token
+
+    CONST           shift, and go to state 83
+    INT             shift, and go to state 84
+    BOOL            shift, and go to state 85
+    VOID            shift, and go to state 86
+    MINUS           shift, and go to state 87
+    RPAREN          shift, and go to state 105
+    COMMA           shift, and go to state 89
+    AMP             shift, and go to state 90
+    ASSIGN          shift, and go to state 91
+    ID              shift, and go to state 92
+    NUMBER          shift, and go to state 93
+    STRING_LITERAL  shift, and go to state 94
+
+    parameter_blob_token  go to state 95
+
+
+State 80
+
+   29 declaration_tail: COMMA ID • declaration_tail
+
+    COMMA  shift, and go to state 64
+
+    $default  reduce using rule 28 (declaration_tail)
+
+    declaration_tail  go to state 106
+
+
+State 81
+
+   26 declaration_or_method_tail: declaration_tail SEMICOLON •
+
+    $default  reduce using rule 26 (declaration_or_method_tail)
+
+
+State 82
+
+   25 id_started_member: OPERATOR operator_symbol LPAREN • param_decl RPAREN const_opt operator_tail
+
+    CONST  shift, and go to state 102
+
+    $default  reduce using rule 37 (const_opt)
+
+    const_opt   go to state 103
+    param_decl  go to state 107
+
+
+State 83
+
+   56 parameter_blob_token: CONST •
+
+    $default  reduce using rule 56 (parameter_blob_token)
+
+
+State 84
+
+   60 parameter_blob_token: INT •
+
+    $default  reduce using rule 60 (parameter_blob_token)
+
+
+State 85
+
+   61 parameter_blob_token: BOOL •
+
+    $default  reduce using rule 61 (parameter_blob_token)
+
+
+State 86
+
+   62 parameter_blob_token: VOID •
+
+    $default  reduce using rule 62 (parameter_blob_token)
+
+
+State 87
+
+   66 parameter_blob_token: MINUS •
+
+    $default  reduce using rule 66 (parameter_blob_token)
+
+
+State 88
+
+   23 id_started_member: LPAREN parameter_blob RPAREN • ctor_initializer_opt block
+
+    COLON  shift, and go to state 108
+
+    $default  reduce using rule 30 (ctor_initializer_opt)
+
+    ctor_initializer_opt  go to state 109
+
+
+State 89
+
+   65 parameter_blob_token: COMMA •
+
+    $default  reduce using rule 65 (parameter_blob_token)
+
+
+State 90
+
+   63 parameter_blob_token: AMP •
+
+    $default  reduce using rule 63 (parameter_blob_token)
+
+
+State 91
+
+   64 parameter_blob_token: ASSIGN •
+
+    $default  reduce using rule 64 (parameter_blob_token)
+
+
+State 92
+
+   57 parameter_blob_token: ID •
+
+    $default  reduce using rule 57 (parameter_blob_token)
+
+
+State 93
+
+   58 parameter_blob_token: NUMBER •
+
+    $default  reduce using rule 58 (parameter_blob_token)
+
+
+State 94
+
+   59 parameter_blob_token: STRING_LITERAL •
+
+    $default  reduce using rule 59 (parameter_blob_token)
+
+
+State 95
+
+   55 parameter_blob: parameter_blob parameter_blob_token •
+
+    $default  reduce using rule 55 (parameter_blob)
+
+
+State 96
+
+  120 runtime_expression: ID PLUS ID SEMICOLON •
+
+    $default  reduce using rule 120 (runtime_expression)
+
+
+State 97
+
+  121 runtime_expression: ID MINUS ID SEMICOLON •
+
+    $default  reduce using rule 121 (runtime_expression)
+
+
+State 98
+
+  122 runtime_expression: ID MUL NUMBER SEMICOLON •
+
+    $default  reduce using rule 122 (runtime_expression)
+
+
+State 99
+
+  123 runtime_expression: ID EQ ID SEMICOLON •
+
+    $default  reduce using rule 123 (runtime_expression)
+
+
+State 100
+
+  124 runtime_expression: ID LBRACKET NUMBER RBRACKET • SEMICOLON
+
+    SEMICOLON  shift, and go to state 110
+
+
+State 101
+
+  119 text_declaration: ID ID LPAREN STRING_LITERAL • RPAREN SEMICOLON
+
+    RPAREN  shift, and go to state 111
+
+
+State 102
+
+   38 const_opt: CONST •
+
+    $default  reduce using rule 38 (const_opt)
+
+
+State 103
+
+   41 param_decl: const_opt • type ref_opt ID
+
+    INT   shift, and go to state 112
+    BOOL  shift, and go to state 113
+    VOID  shift, and go to state 114
+    ID    shift, and go to state 115
+
+    type  go to state 116
+
+
+State 104
+
+   22 member_after_type: OPERATOR operator_symbol LPAREN param_decl • RPAREN const_opt operator_tail
+
+    RPAREN  shift, and go to state 117
+
+
+State 105
+
+   27 declaration_or_method_tail: LPAREN parameter_blob RPAREN • const_opt method_tail
+
+    CONST  shift, and go to state 102
+
+    $default  reduce using rule 37 (const_opt)
+
+    const_opt  go to state 118
+
+
+State 106
+
+   29 declaration_tail: COMMA ID declaration_tail •
+
+    $default  reduce using rule 29 (declaration_tail)
+
+
+State 107
+
+   25 id_started_member: OPERATOR operator_symbol LPAREN param_decl • RPAREN const_opt operator_tail
+
+    RPAREN  shift, and go to state 119
+
+
+State 108
+
+   31 ctor_initializer_opt: COLON • ctor_initializer_list
+
+    ID  shift, and go to state 120
+
+    ctor_initializer_list  go to state 121
+    ctor_initializer       go to state 122
+
+
+State 109
+
+   23 id_started_member: LPAREN parameter_blob RPAREN ctor_initializer_opt • block
+
+    LBRACE  shift, and go to state 123
+
+    block  go to state 124
+
+
+State 110
+
+  124 runtime_expression: ID LBRACKET NUMBER RBRACKET SEMICOLON •
+
+    $default  reduce using rule 124 (runtime_expression)
+
+
+State 111
+
+  119 text_declaration: ID ID LPAREN STRING_LITERAL RPAREN • SEMICOLON
+
+    SEMICOLON  shift, and go to state 125
+
+
+State 112
+
+   45 type: INT •
+
+    $default  reduce using rule 45 (type)
+
+
+State 113
+
+   46 type: BOOL •
+
+    $default  reduce using rule 46 (type)
+
+
+State 114
+
+   47 type: VOID •
+
+    $default  reduce using rule 47 (type)
+
+
+State 115
+
+   44 type: ID •
+
+    $default  reduce using rule 44 (type)
+
+
+State 116
+
+   41 param_decl: const_opt type • ref_opt ID
+
+    AMP  shift, and go to state 126
+
+    $default  reduce using rule 42 (ref_opt)
+
+    ref_opt  go to state 127
+
+
+State 117
+
+   22 member_after_type: OPERATOR operator_symbol LPAREN param_decl RPAREN • const_opt operator_tail
+
+    CONST  shift, and go to state 102
+
+    $default  reduce using rule 37 (const_opt)
+
+    const_opt  go to state 128
+
+
+State 118
+
+   27 declaration_or_method_tail: LPAREN parameter_blob RPAREN const_opt • method_tail
+
+    LBRACE     shift, and go to state 123
+    SEMICOLON  shift, and go to state 129
+
+    method_tail  go to state 130
+    block        go to state 131
+
+
+State 119
+
+   25 id_started_member: OPERATOR operator_symbol LPAREN param_decl RPAREN • const_opt operator_tail
+
+    CONST  shift, and go to state 102
+
+    $default  reduce using rule 37 (const_opt)
+
+    const_opt  go to state 132
+
+
+State 120
+
+   34 ctor_initializer: ID • LPAREN argument_blob RPAREN
+
+    LPAREN  shift, and go to state 133
+
+
+State 121
+
+   31 ctor_initializer_opt: COLON ctor_initializer_list •
+   33 ctor_initializer_list: ctor_initializer_list • COMMA ctor_initializer
+
+    COMMA  shift, and go to state 134
+
+    $default  reduce using rule 31 (ctor_initializer_opt)
+
+
+State 122
+
+   32 ctor_initializer_list: ctor_initializer •
+
+    $default  reduce using rule 32 (ctor_initializer_list)
+
+
+State 123
+
+   83 block: LBRACE • block_items RBRACE
+
+    $default  reduce using rule 84 (block_items)
+
+    block_items  go to state 135
+
+
+State 124
+
+   23 id_started_member: LPAREN parameter_blob RPAREN ctor_initializer_opt block •
+
+    $default  reduce using rule 23 (id_started_member)
+
+
+State 125
+
+  119 text_declaration: ID ID LPAREN STRING_LITERAL RPAREN SEMICOLON •
+
+    $default  reduce using rule 119 (text_declaration)
+
+
+State 126
+
+   43 ref_opt: AMP •
+
+    $default  reduce using rule 43 (ref_opt)
+
+
+State 127
+
+   41 param_decl: const_opt type ref_opt • ID
+
+    ID  shift, and go to state 136
+
+
+State 128
+
+   22 member_after_type: OPERATOR operator_symbol LPAREN param_decl RPAREN const_opt • operator_tail
+
+    LBRACE     shift, and go to state 123
+    SEMICOLON  shift, and go to state 137
+
+    operator_tail  go to state 138
+    block          go to state 139
+
+
+State 129
+
+   35 method_tail: SEMICOLON •
+
+    $default  reduce using rule 35 (method_tail)
+
+
+State 130
+
+   27 declaration_or_method_tail: LPAREN parameter_blob RPAREN const_opt method_tail •
+
+    $default  reduce using rule 27 (declaration_or_method_tail)
+
+
+State 131
+
+   36 method_tail: block •
+
+    $default  reduce using rule 36 (method_tail)
+
+
+State 132
+
+   25 id_started_member: OPERATOR operator_symbol LPAREN param_decl RPAREN const_opt • operator_tail
+
+    LBRACE     shift, and go to state 123
+    SEMICOLON  shift, and go to state 137
+
+    operator_tail  go to state 140
+    block          go to state 139
+
+
+State 133
+
+   34 ctor_initializer: ID LPAREN • argument_blob RPAREN
+
+    $default  reduce using rule 67 (argument_blob)
+
+    argument_blob  go to state 141
+
+
+State 134
+
+   33 ctor_initializer_list: ctor_initializer_list COMMA • ctor_initializer
+
+    ID  shift, and go to state 120
+
+    ctor_initializer  go to state 142
+
+
+State 135
+
+   83 block: LBRACE block_items • RBRACE
+   85 block_items: block_items • block_item
+
+    OPERATOR        shift, and go to state 143
+    PUBLIC          shift, and go to state 144
+    CONST           shift, and go to state 145
+    INT             shift, and go to state 146
+    BOOL            shift, and go to state 147
+    VOID            shift, and go to state 148
+    RETURN          shift, and go to state 149
+    PLUS            shift, and go to state 150
+    MINUS           shift, and go to state 151
+    MUL             shift, and go to state 152
+    DIV             shift, and go to state 153
+    EQ              shift, and go to state 154
+    LBRACE          shift, and go to state 123
+    RBRACE          shift, and go to state 155
+    LPAREN          shift, and go to state 156
+    RPAREN          shift, and go to state 157
+    SEMICOLON       shift, and go to state 158
+    LBRACKET        shift, and go to state 159
+    RBRACKET        shift, and go to state 160
+    COLON           shift, and go to state 161
+    COMMA           shift, and go to state 162
+    AMP             shift, and go to state 163
+    ASSIGN          shift, and go to state 164
+    ID              shift, and go to state 165
+    NUMBER          shift, and go to state 166
+    STRING_LITERAL  shift, and go to state 167
+
+    block        go to state 168
+    block_item   go to state 169
+    block_token  go to state 170
+
+
+State 136
+
+   41 param_decl: const_opt type ref_opt ID •
+
+    $default  reduce using rule 41 (param_decl)
+
+
+State 137
+
+   39 operator_tail: SEMICOLON •
+
+    $default  reduce using rule 39 (operator_tail)
+
+
+State 138
+
+   22 member_after_type: OPERATOR operator_symbol LPAREN param_decl RPAREN const_opt operator_tail •
+
+    $default  reduce using rule 22 (member_after_type)
+
+
+State 139
+
+   40 operator_tail: block •
+
+    $default  reduce using rule 40 (operator_tail)
+
+
+State 140
+
+   25 id_started_member: OPERATOR operator_symbol LPAREN param_decl RPAREN const_opt operator_tail •
+
+    $default  reduce using rule 25 (id_started_member)
+
+
+State 141
+
+   34 ctor_initializer: ID LPAREN argument_blob • RPAREN
+   68 argument_blob: argument_blob • argument_token
+
+    INT             shift, and go to state 171
+    BOOL            shift, and go to state 172
+    VOID            shift, and go to state 173
+    PLUS            shift, and go to state 174
+    MINUS           shift, and go to state 175
+    MUL             shift, and go to state 176
+    DIV             shift, and go to state 177
+    EQ              shift, and go to state 178
+    RPAREN          shift, and go to state 179
+    COMMA           shift, and go to state 180
+    AMP             shift, and go to state 181
+    ASSIGN          shift, and go to state 182
+    ID              shift, and go to state 183
+    NUMBER          shift, and go to state 184
+    STRING_LITERAL  shift, and go to state 185
+
+    argument_token  go to state 186
+
+
+State 142
+
+   33 ctor_initializer_list: ctor_initializer_list COMMA ctor_initializer •
+
+    $default  reduce using rule 33 (ctor_initializer_list)
+
+
+State 143
+
+   97 block_token: OPERATOR •
+
+    $default  reduce using rule 97 (block_token)
+
+
+State 144
+
+   96 block_token: PUBLIC •
+
+    $default  reduce using rule 96 (block_token)
+
+
+State 145
+
+   95 block_token: CONST •
+
+    $default  reduce using rule 95 (block_token)
+
+
+State 146
+
+   91 block_token: INT •
+
+    $default  reduce using rule 91 (block_token)
+
+
+State 147
+
+   92 block_token: BOOL •
+
+    $default  reduce using rule 92 (block_token)
+
+
+State 148
+
+   93 block_token: VOID •
+
+    $default  reduce using rule 93 (block_token)
+
+
+State 149
+
+   94 block_token: RETURN •
+
+    $default  reduce using rule 94 (block_token)
+
+
+State 150
+
+   98 block_token: PLUS •
+
+    $default  reduce using rule 98 (block_token)
+
+
+State 151
+
+   99 block_token: MINUS •
+
+    $default  reduce using rule 99 (block_token)
+
+
+State 152
+
+  100 block_token: MUL •
+
+    $default  reduce using rule 100 (block_token)
+
+
+State 153
+
+  101 block_token: DIV •
+
+    $default  reduce using rule 101 (block_token)
+
+
+State 154
+
+  102 block_token: EQ •
+
+    $default  reduce using rule 102 (block_token)
+
+
+State 155
+
+   83 block: LBRACE block_items RBRACE •
+
+    $default  reduce using rule 83 (block)
+
+
+State 156
+
+  103 block_token: LPAREN •
+
+    $default  reduce using rule 103 (block_token)
+
+
+State 157
+
+  104 block_token: RPAREN •
+
+    $default  reduce using rule 104 (block_token)
+
+
+State 158
+
+  105 block_token: SEMICOLON •
+
+    $default  reduce using rule 105 (block_token)
+
+
+State 159
+
+  106 block_token: LBRACKET •
+
+    $default  reduce using rule 106 (block_token)
+
+
+State 160
+
+  107 block_token: RBRACKET •
+
+    $default  reduce using rule 107 (block_token)
+
+
+State 161
+
+  108 block_token: COLON •
+
+    $default  reduce using rule 108 (block_token)
+
+
+State 162
+
+  109 block_token: COMMA •
+
+    $default  reduce using rule 109 (block_token)
+
+
+State 163
+
+  110 block_token: AMP •
+
+    $default  reduce using rule 110 (block_token)
+
+
+State 164
+
+  111 block_token: ASSIGN •
+
+    $default  reduce using rule 111 (block_token)
+
+
+State 165
+
+   88 block_token: ID •
+
+    $default  reduce using rule 88 (block_token)
+
+
+State 166
+
+   89 block_token: NUMBER •
+
+    $default  reduce using rule 89 (block_token)
+
+
+State 167
+
+   90 block_token: STRING_LITERAL •
+
+    $default  reduce using rule 90 (block_token)
+
+
+State 168
+
+   86 block_item: block •
+
+    $default  reduce using rule 86 (block_item)
+
+
+State 169
+
+   85 block_items: block_items block_item •
+
+    $default  reduce using rule 85 (block_items)
+
+
+State 170
+
+   87 block_item: block_token •
+
+    $default  reduce using rule 87 (block_item)
+
+
+State 171
+
+   72 argument_token: INT •
+
+    $default  reduce using rule 72 (argument_token)
+
+
+State 172
+
+   73 argument_token: BOOL •
+
+    $default  reduce using rule 73 (argument_token)
+
+
+State 173
+
+   74 argument_token: VOID •
+
+    $default  reduce using rule 74 (argument_token)
+
+
+State 174
+
+   77 argument_token: PLUS •
+
+    $default  reduce using rule 77 (argument_token)
+
+
+State 175
+
+   76 argument_token: MINUS •
+
+    $default  reduce using rule 76 (argument_token)
+
+
+State 176
+
+   78 argument_token: MUL •
+
+    $default  reduce using rule 78 (argument_token)
+
+
+State 177
+
+   79 argument_token: DIV •
+
+    $default  reduce using rule 79 (argument_token)
+
+
+State 178
+
+   80 argument_token: EQ •
+
+    $default  reduce using rule 80 (argument_token)
+
+
+State 179
+
+   34 ctor_initializer: ID LPAREN argument_blob RPAREN •
+
+    $default  reduce using rule 34 (ctor_initializer)
+
+
+State 180
+
+   75 argument_token: COMMA •
+
+    $default  reduce using rule 75 (argument_token)
+
+
+State 181
+
+   81 argument_token: AMP •
+
+    $default  reduce using rule 81 (argument_token)
+
+
+State 182
+
+   82 argument_token: ASSIGN •
+
+    $default  reduce using rule 82 (argument_token)
+
+
+State 183
+
+   69 argument_token: ID •
+
+    $default  reduce using rule 69 (argument_token)
+
+
+State 184
+
+   70 argument_token: NUMBER •
+
+    $default  reduce using rule 70 (argument_token)
+
+
+State 185
+
+   71 argument_token: STRING_LITERAL •
+
+    $default  reduce using rule 71 (argument_token)
+
+
+State 186
+
+   68 argument_blob: argument_blob argument_token •
+
+    $default  reduce using rule 68 (argument_blob)

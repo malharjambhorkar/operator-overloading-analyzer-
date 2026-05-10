@@ -1,8 +1,11 @@
-class A {
+class Text {
+    string value;
+
 public:
-    A operator+(A obj);
-    A operator+(A obj);   // duplicate
-    int operator-(A obj); // wrong return type
-    A operator==(A obj);
-    A operator[](int i);
+    Text operator+(Text t);
+    Text operator+(Text t);     // duplicate
+    int operator-(Text t);      // wrong return type
+    Text operator*(int times);
+    int operator==(Text t);     // wrong return type
+    char operator[](int index);
 };

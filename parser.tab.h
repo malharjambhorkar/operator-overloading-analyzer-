@@ -1,9 +1,8 @@
 /* A Bison parser, made by GNU Bison 3.8.2.  */
 
-/* Bison interface for Yacc-like parsers in C
+/* Skeleton interface for Bison GLR parsers in C
 
-   Copyright (C) 1984, 1989-1990, 2000-2015, 2018-2021 Free Software Foundation,
-   Inc.
+   Copyright (C) 2002-2015, 2018-2021 Free Software Foundation, Inc.
 
    This program is free software: you can redistribute it and/or modify
    it under the terms of the GNU General Public License as published by
@@ -31,10 +30,6 @@
    This special exception was added by the Free Software Foundation in
    version 2.2 of Bison.  */
 
-/* DO NOT RELY ON FEATURES THAT ARE NOT DOCUMENTED in the manual,
-   especially those whose name start with YY_ or yy_.  They are
-   private implementation details that can be changed or removed.  */
-
 #ifndef YY_YY_PARSER_TAB_H_INCLUDED
 # define YY_YY_PARSER_TAB_H_INCLUDED
 /* Debug traces.  */
@@ -56,22 +51,31 @@ extern int yydebug;
     YYUNDEF = 257,                 /* "invalid token"  */
     CLASS = 258,                   /* CLASS  */
     OPERATOR = 259,                /* OPERATOR  */
-    ID = 260,                      /* ID  */
-    PUBLIC = 261,                  /* PUBLIC  */
+    PUBLIC = 260,                  /* PUBLIC  */
+    CONST = 261,                   /* CONST  */
     INT = 262,                     /* INT  */
-    PLUS = 263,                    /* PLUS  */
-    MINUS = 264,                   /* MINUS  */
-    MUL = 265,                     /* MUL  */
-    DIV = 266,                     /* DIV  */
-    EQ = 267,                      /* EQ  */
-    LBRACE = 268,                  /* LBRACE  */
-    RBRACE = 269,                  /* RBRACE  */
-    LPAREN = 270,                  /* LPAREN  */
-    RPAREN = 271,                  /* RPAREN  */
-    SEMICOLON = 272,               /* SEMICOLON  */
-    LBRACKET = 273,                /* LBRACKET  */
-    RBRACKET = 274,                /* RBRACKET  */
-    COLON = 275                    /* COLON  */
+    BOOL = 263,                    /* BOOL  */
+    VOID = 264,                    /* VOID  */
+    RETURN = 265,                  /* RETURN  */
+    PLUS = 266,                    /* PLUS  */
+    MINUS = 267,                   /* MINUS  */
+    MUL = 268,                     /* MUL  */
+    DIV = 269,                     /* DIV  */
+    EQ = 270,                      /* EQ  */
+    LBRACE = 271,                  /* LBRACE  */
+    RBRACE = 272,                  /* RBRACE  */
+    LPAREN = 273,                  /* LPAREN  */
+    RPAREN = 274,                  /* RPAREN  */
+    SEMICOLON = 275,               /* SEMICOLON  */
+    LBRACKET = 276,                /* LBRACKET  */
+    RBRACKET = 277,                /* RBRACKET  */
+    COLON = 278,                   /* COLON  */
+    COMMA = 279,                   /* COMMA  */
+    AMP = 280,                     /* AMP  */
+    ASSIGN = 281,                  /* ASSIGN  */
+    ID = 282,                      /* ID  */
+    NUMBER = 283,                  /* NUMBER  */
+    STRING_LITERAL = 284           /* STRING_LITERAL  */
   };
   typedef enum yytokentype yytoken_kind_t;
 #endif
@@ -80,11 +84,11 @@ extern int yydebug;
 #if ! defined YYSTYPE && ! defined YYSTYPE_IS_DECLARED
 union YYSTYPE
 {
-#line 37 "parser.y"
+#line 167 "parser.y"
 
     const char* str;
 
-#line 88 "parser.tab.h"
+#line 92 "parser.tab.h"
 
 };
 typedef union YYSTYPE YYSTYPE;
@@ -95,8 +99,6 @@ typedef union YYSTYPE YYSTYPE;
 
 extern YYSTYPE yylval;
 
-
 int yyparse (void);
-
 
 #endif /* !YY_YY_PARSER_TAB_H_INCLUDED  */
