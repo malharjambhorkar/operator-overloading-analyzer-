@@ -21,6 +21,8 @@ This project implements a syntax and semantic analyzer for C++ operator overload
 Build the analyzer:
 
 ```bash
+cd /g/OperatorOverloadingAnalyzer
+
 flex lexer.l
 bison -d parser.y
 g++ lex.yy.c parser.tab.c symtab.cpp -o analyzer
